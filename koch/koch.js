@@ -1,6 +1,7 @@
 
 var canvas;
 var gl;
+const d60 = Math.PI/3;
 
 var points = [];
 
@@ -54,32 +55,31 @@ function init()
 
 function divideKoch( p1, p5, count )
 {
-
     // check for end of recursion
     if ( count <= 0 ) {
         points.push(p5);
     }
     else {
-        var near = vec2(
-            p1[0] + (p5[0] - p1[0]) / 3, 
+        var p2 = vec2(
+            p1[0] + (p5[0] - p1[0]) / 3,
             p1[1] + (p5[1] - p1[1]) / 3
         );
-        var far = vec2(
-            p1[0] + (p5[0] - p1[0]) * 2 / 3, 
-            p1[0] + (p5[0] - p1[0]) * 2 / 3
+        var p4 = vec2(
+            p1[0] + (p5[0] - p1[0]) * 2 / 3,
+            p1[1] + (p5[1] - p1[1]) * 2 / 3
         );
-        var middle = vec2(
-            far[0] - near[0],
-            far[1] - near[1]
+        var p3 = vec2(
+            p4[0] * Math.cos(d60) - p4[1] * Math.sin(d60) + p2[0] - p2[0] * Math.cos(d60) + p2[1] * Math.sin(d60),
+            p4[0] * Math.sin(d60) + p4[1] * Math.cos(d60) + p2[1] - p2[0] * Math.sin(d60) - p2[1] * Math.cos(d60)
         );
-
-        console.log("near: " + near);
-        --count;
-        console.log(count);
-        points.push(near);
-        points.push(middle);
-        divideKoch(near, p5, count);
-        points.push(far);
+        //points.push(p1);
+        divideKoch(p1, p2, count - 1);
+        //points.push(p2);
+        divideKoch(p2, p3, count - 1);
+        //points.push(p3);
+        divideKoch(p3, p4, count - 1);
+        //points.push(p4);
+        divideKoch(p4, p5, count - 1);
     }
 }
 
@@ -94,14 +94,7 @@ function render()
     points = [];
     points.push(vertices[0]);
 
-    // Delete this
-    p1 = vec2(-0.9, -0.9);
-    p5 = vec2(0.9, -0.9);
-    points.push(vec2(-0.3, -0.9));
-    points.push(vec2(0, Math.sqrt(0.27) * -1));
-    points.push(vec2(0.3, -0.9));
-    points.push(vec2(0.9, -0.9));
-    //divideKoch( vertices[0], vertices[1], numTimesToSubdivide);
+    divideKoch( vertices[0], vertices[1], numTimesToSubdivide);
 
     console.log(points);
 
