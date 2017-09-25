@@ -1,7 +1,7 @@
 
 var canvas;
 var gl;
-const d60 = Math.PI/3;
+const d60 = Math.PI/3; //represents 60 degrees
 
 var points = [];
 
@@ -72,13 +72,9 @@ function divideKoch( p1, p5, count )
             p4[0] * Math.cos(d60) - p4[1] * Math.sin(d60) + p2[0] - p2[0] * Math.cos(d60) + p2[1] * Math.sin(d60),
             p4[0] * Math.sin(d60) + p4[1] * Math.cos(d60) + p2[1] - p2[0] * Math.sin(d60) - p2[1] * Math.cos(d60)
         );
-        //points.push(p1);
         divideKoch(p1, p2, count - 1);
-        //points.push(p2);
         divideKoch(p2, p3, count - 1);
-        //points.push(p3);
         divideKoch(p3, p4, count - 1);
-        //points.push(p4);
         divideKoch(p4, p5, count - 1);
     }
 }
